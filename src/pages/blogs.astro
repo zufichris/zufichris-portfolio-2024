@@ -1,0 +1,60 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Navbar from "@components/Navbar.astro";
+import Footer from "@components/Footer.astro";
+
+// blog posts list
+import { getCollection, type CollectionEntry } from "astro:content";
+import BlogPosts from "@components/BlogPosts.astro";
+
+// rss feed logo
+import { Icon } from "astro-icon/components";
+
+// all blog posts
+let blogPosts: CollectionEntry<"blogs">[];
+
+try {
+  blogPosts = await getCollection("blogs");
+} catch (error) {
+  blogPosts = [];
+}
+---
+
+<Layout
+  title="My blog posts"
+  desc="where I talk about software development and my opinion around technology"
+>
+  <Navbar />
+  <main class="container mx-auto px-5 sm:px-12 mt-32 md:mt-60">
+    <h1
+      class="text-2xl md:text-5xl font-extrabold inline-flex gap-[.75em] items-center"
+    >
+      Blog Posts
+      <a href="/rss.xml"
+        ><Icon name="simple-icons:rss" class="size-[.75em]" /></a
+      >
+    </h1>
+    <p class="text-sm md:text-lg lg:text-xl mt-2">These are my blog posts</p>
+  </main>
+  <section class="container mx-auto px-5 sm:px-12 mt-12">
+    <ul class="flex flex-col gap-5" id="blogs">
+      {
+        blogPosts.length > 0
+          ? blogPosts
+              .sort(
+                (a, b) => new Date(b.data.pubDate) - new Date(a.data.pubDate),
+              )
+              .map((blog) => (
+                <BlogPosts
+                  url={`/blog/${blog.slug}`}
+                  title={blog.data.title}
+                  desc={blog.data.desc}
+                  pubDate={blog.data.pubDate}
+                />
+              ))
+          : "No blog posts have been written"
+      }
+    </ul>
+  </section>
+  <Footer />
+</Layout>

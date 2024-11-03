@@ -1,0 +1,35 @@
+/* Import tailwind classes */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Twemoji */
+img.twemoji {
+  @apply inline size-[1em] align-[-0.1em] select-none;
+}
+
+/* Dont apply margin when twemoji inside prose (tailwind typography) */
+.prose img.twemoji {
+  @apply m-0;
+}
+
+/* Scroll-driven animate */
+main,
+section,
+.project {
+  @apply opacity-0 motion-safe:translate-y-10 transition-[opacity,transform] duration-1000;
+}
+
+footer {
+  @apply opacity-0 transition-opacity duration-1000;
+}
+
+main.animate,
+section.animate,
+.project.animate {
+  @apply opacity-100 translate-y-0;
+}
+
+footer.animate {
+  @apply opacity-100;
+}

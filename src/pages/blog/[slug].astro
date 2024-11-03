@@ -1,0 +1,46 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+
+// generate path
+export async function getStaticPaths() {
+  const blogEntries = await getCollection("blogs");
+  return blogEntries.map((entry: CollectionEntry<"blogs">) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry }: { entry: CollectionEntry<"blogs"> } = Astro.props;
+const { Content } = await entry.render();
+
+import Layout from "@layouts/Layout.astro";
+import Navbar from "@components/Navbar.astro";
+import Footer from "@components/Footer.astro";
+
+// remove time for datetime
+const date = entry.data.pubDate.toISOString().slice(0, 10);
+// format date dd mmm yyyy for user
+const formattedDate = Intl.DateTimeFormat("en-GB", {
+  day: "2-digit",
+  month: "short",
+  year: "numeric",
+}).format(new Date(entry.data.pubDate));
+---
+
+<Layout title={entry.data.title} desc={entry.data.desc}>
+  <Navbar />
+  <main class="px-5 md:px-12 mt-32 md:mt-60">
+    <article
+      class="prose prose-cyan mx-auto prose-invert prose-sm sm:prose-base md:prose-lg lg:prose-xl md:max-w-[65ch] lg:max-w-[80ch] xl:max-w-[100ch]"
+    >
+      <header>
+        <em>Published <time datetime={date}>{formattedDate}</time></em>
+        <h1>{entry.data.title}</h1>
+      </header>
+      <section>
+        <Content />
+      </section>
+    </article>
+  </main>
+  <Footer />
+</Layout>

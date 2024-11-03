@@ -1,0 +1,90 @@
+---
+import {MyDetails} from "../constants"
+const { title, desc } = Astro.props;
+import "@styles/global.css";
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/jpeg" href="/favicon.png" />
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={desc} />
+    <meta property="og:url" content="{MyDetails.url}/" />
+    <meta
+      property="og:image"
+      content="{MyDetails.url}/favicon.png"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name"/>
+    <meta name="theme-color" content="#111827" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- RSS auto discovery -->
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={MyDetails.fullName}
+      href={new URL("rss.xml", Astro.site)}
+    />
+
+    <!-- Sitemap -->
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <!-- Twemoji -->
+    <script
+      is:inline
+      src="https://cdn.jsdelivr.net/npm/@twemoji/api@latest/dist/twemoji.min.js"
+      crossorigin="anonymous"></script>
+
+    <title>{title}</title>
+  </head>
+
+  <body class="bg-gray-900 text-gray-50 font-mono">
+    <slot />
+
+    <!-- "vim" mode -->
+    <p
+      class="fixed bottom-0 inset-x-0 bg-gray-900 py-2 text-base md:text-xl hidden container mx-auto font-semibold"
+      id="vimCmd"
+    >
+      :
+    </p>
+    <script src="@scripts/vim"></script>
+
+    <script>
+      // parse unicode emoji into twemoji
+      twemoji.parse(document.body, {
+        folder: "svg",
+        ext: ".svg",
+        className: "twemoji",
+      });
+
+      // scroll-driven animation
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          // add `animate` class when the element enters our viewport
+          if (entry.isIntersecting) {
+            entry.target.classList.add("animate");
+          } else {
+            entry.target.classList.remove("animate");
+          }
+        });
+      });
+
+      // grab all the element that want to be animated
+      // which in this case is the `<main>`, all the `<section>`, the `<footer>`, and all the projects
+      document
+        .querySelectorAll("main, section, footer, .project")
+        .forEach((el) => observer.observe(el));
+    </script>
+  </body>
+</html>

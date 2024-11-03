@@ -1,0 +1,101 @@
+---
+import { Icon } from "astro-icon/components";
+import {MyDetails} from "../constants"
+let pathname = Astro.url.pathname;
+---
+
+<nav
+  class="fixed inset-x-0 top-0 py-8 md:py-16 motion-safe:transition-[padding,transform] motion-safe:duration-500 z-50"
+>
+  <div
+    class="container mx-auto flex justify-between items-center px-5 sm:px-12"
+  >
+    <a class="text-3xl font-extrabold hidden lg:block" href="/">
+      {MyDetails.nickName}</a>
+    <ul class="flex gap-6 md:gap-12 text-base sm:text-xl md:text-2xl">
+      <li>
+        <a
+          href="/"
+          class={pathname == "/"
+            ? "font-semibold"
+            : "text-gray-500 transition-colors duration-300 hover:text-gray-300"}
+          >Home</a
+        >
+      </li>
+      <li>
+        <a
+          href="/projects"
+          class={pathname.startsWith("/projects")
+            ? "font-semibold"
+            : "text-gray-500 transition-colors duration-300 hover:text-gray-300"}
+          >Projects</a
+        >
+      </li>
+      <li>
+        <a
+          href="/blogs"
+          class={pathname.startsWith("/blog")
+            ? "font-semibold"
+            : "text-gray-500 transition-colors duration-300 hover:text-gray-300"}
+          >Blogs</a
+        >
+      </li>
+    </ul>
+    <ul class="flex gap-5 md:gap-8 justify-center items-center">
+      <li>
+        <a href={MyDetails.github} target="_blank">
+          <Icon
+            name="simple-icons:github"
+            class="size-6 md:size-8 text-gray-50 transition-colors hover:text-gray-300"
+          />
+        </a>
+      </li>
+      <li>
+        <a href={MyDetails.twitter} target="_blank">
+          <Icon
+            name="twitter"
+            class="size-6 md:size-8 text-gray-50 transition-colors hover:text-gray-300"
+          />
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<script>
+  const pathname = window.location.pathname;
+  const nav = document.querySelector("nav");
+  let prevScrollPos: number = window.scrollY;
+
+  // class variable
+  const bigNav = ["py-8", "md:py-16"];
+  const smallNav = ["py-4", "md:py-6", "bg-gray-900/70", "backdrop-blur-lg"];
+  const noNav = ["-translate-y-full"];
+
+  const updateNav = () => {
+    let scrollPos = window.scrollY;
+    if (scrollPos <= 0) {
+      nav?.classList.add(...bigNav);
+      nav?.classList.remove(...smallNav);
+      nav?.classList.remove(...noNav);
+    } else {
+      nav?.classList.add(...smallNav);
+      nav?.classList.remove(...bigNav);
+
+      if (pathname.startsWith("/blog/")) {
+        // hide nav when the user scroll down
+        // and show it again when the user scroll up
+        if (prevScrollPos < scrollPos) nav?.classList.add(...noNav);
+        else nav?.classList.remove(...noNav);
+      }
+    }
+
+    prevScrollPos = scrollPos;
+  };
+
+  // run it when the web loaded for the first time
+  updateNav();
+
+  // and when the user scroll the webpages
+  window.addEventListener("scroll", () => updateNav());
+</script>

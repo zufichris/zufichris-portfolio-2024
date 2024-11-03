@@ -1,0 +1,26 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Navbar from "@components/Navbar.astro";
+import Footer from "@components/Footer.astro";
+---
+
+<Layout
+  title="404 Not Found"
+  desc="The page you're looking for might be removed or is temporarily unavailable"
+>
+  <Navbar />
+  <section
+    class="container mx-auto px-5 sm:px-12 mt-36 md:mt-60 text-center flex flex-col items-center gap-12"
+  >
+    <h1 class="text-6xl md:text-9xl font-semibold">404</h1>
+    <p class="max-w-[45ch] text-lg md:text-2xl">
+      The page you're looking for might be removed or is temporarily unavailable
+    </p>
+    <a
+      href="/"
+      class="mt-10 text-base md:text-xl px-6 py-3 md:py-4 rounded-xl border border-gray-600 transition-colors duration-300 hover:bg-gray-800"
+      >Go back home</a
+    >
+  </section>
+  <Footer />
+</Layout>
